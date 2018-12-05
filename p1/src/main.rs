@@ -22,6 +22,12 @@ fn main() {
             .value_name("ADJUSTMENTS")
             .help("Comma separated list of adjustments to make to the frequency")
             .takes_value(true))
+        .arg(Arg::with_name("repeats")
+            .short("r")
+            .long("repeats")
+            .value_name("REPEATS")
+            .help("number of times to process adjustments to look for repeating frequency.")
+            .takes_value(true))
         .get_matches();
 
     // extract the starting frequency and convert to i64.
@@ -29,10 +35,21 @@ fn main() {
         .parse()
         .unwrap();
 
+    // extract the number of repeats and convert to i64.
+    let rcvd_repeats: i64 = matches.value_of("repeats").unwrap_or("0")
+        .parse()
+        .unwrap();
+
+    // extract the adjustments.
+    let adj = matches.value_of("adjustments").unwrap_or("0");
+
     // initialise the Frequency ready for adjustment.
     let mut freq: frequency::Frequency = frequency::Frequency::new(rcvd_freq);
 
-    freq.process_adjustments(matches.value_of("adjustments")
-                                 .unwrap_or("0"));
+    if rcvd_repeats > 0 {
+        freq.process_adjustments_until_repeats(adj, rcvd_repeats);
+    } else {
+        freq.process_adjustments(adj);
+    }
 }
 
