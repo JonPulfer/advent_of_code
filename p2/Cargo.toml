@@ -1,0 +1,6 @@
+[package]
+name = "p2"
+version = "0.1.0"
+authors = ["Jonathan Pulfer <jpulfer@cloudflare.com>"]
+
+[dependencies]
