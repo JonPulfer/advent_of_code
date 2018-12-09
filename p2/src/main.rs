@@ -1,4 +1,5 @@
 mod checksum;
+mod warehouse;
 
 use std::error::Error;
 use std::fs::File;
@@ -27,5 +28,9 @@ fn main() {
 
 
     // generate a simple checksum from the file contents.
-    println!("{}", checksum::simple_checksum(contents.as_str()))
+    println!("simple_checksum: {}", checksum::simple_checksum(contents.as_str()));
+
+    let warehouse = warehouse::Warehouse::new(contents.as_str());
+    let match_chars = warehouse.look_for_best_matches();
+    println!("match_chars: {}", match_chars);
 }
