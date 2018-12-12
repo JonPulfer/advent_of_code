@@ -150,7 +150,7 @@ fn test_from_input_line() {
     let cl = Claim::from_input_line(line);
 
     let target = Claim {
-        id: "#1",
+        id: "1",
         top_left_position: Coordinate { from_left: 662, from_top: 777 },
         size: Dimension { width: 18, height: 27 },
     };
@@ -164,7 +164,7 @@ fn test_from_input_line() {
 #[test]
 fn test_claim_coordinates() {
     let cl = Claim {
-        id: "#1",
+        id: "1",
         top_left_position: Coordinate { from_top: 2, from_left: 3 },
         size: Dimension { width: 3, height: 4 },
     };
