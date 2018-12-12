@@ -19,6 +19,7 @@ fn main() {
     }
 
     println!("over allocations: {}", fabric.count_over_allocated_squares());
+    println!("claim without collisions: {}", fabric.find_claim_without_collisions());
 }
 
 

@@ -1,11 +1,12 @@
 use regex::Regex;
+use std::collections::HashMap;
+use std::collections::hash_map::Entry;
 
 lazy_static! {
-    static ref CLAIMRE: Regex = Regex::new(r"^(#\d+)\s@\s(\d+),(\d+):\s(\d+)x(\d+)$").unwrap();
+    static ref CLAIMRE: Regex = Regex::new(r"^#(\d+)\s@\s(\d+),(\d+):\s(\d+)x(\d+)$").unwrap();
 }
 
 #[derive(Debug)]
-
 /// A large, rectangular piece of fabric as discovered in a box lost in the mythical warehouse from
 /// puzzle 2. This magical fabric is being fought over by the elves who are more than a little
 /// fraught by a last minute requirement to make something (I can certainly sympathise with this
@@ -44,6 +45,46 @@ impl<'a> Fabric<'a> {
             }
         }
         over_allocations
+    }
+
+    /// Search through the fabric allocations and record whether there are collisions for each claim
+    /// seen. If there is a claim that has no collisions the claim id will be returned.
+    pub fn find_claim_without_collisions(&self) -> String {
+        let mut claim_collision_counts: HashMap<String, u32> = HashMap::new();
+        let mut claim_seen: HashMap<String, bool> = HashMap::new();
+
+        // Work through the allocated grid squares and record all claims seen in one map and in
+        // another map, record colliding claims.
+        for y in self.grid.iter() {
+            for x in y {
+                if x.claims.len() == 1 {
+                    let seen = claim_seen.entry(x.claims[0].id.to_string())
+                        .or_insert(false);
+                    *seen = true;
+                }
+                if x.claims.len() > 1 {
+                    for cl in x.claims.iter() {
+                        let claim_id = String::from(cl.id);
+                        let collided = claim_collision_counts.entry(claim_id)
+                            .or_insert(0);
+                        *collided += 1;
+                    }
+                }
+            }
+        }
+
+        // Work through the two maps to see whether each seen claim appears in the map recording
+        // those that collide with other claims.
+        for (cl_id, _seen) in claim_seen {
+            let possible_id = cl_id.clone();
+            let collided = claim_collision_counts.entry(cl_id);
+            match collided {
+                Entry::Occupied(_) => {}
+                Entry::Vacant(_) => { return possible_id }
+            }
+        }
+
+        return "".to_string();
     }
 }
 
