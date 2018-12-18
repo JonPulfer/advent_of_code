@@ -1,5 +1,5 @@
 [package]
-name = "p3"
+name = "d3"
 version = "0.1.0"
 authors = ["Jonathan Pulfer <jpulfer@cloudflare.com>"]
 edition = "2018"

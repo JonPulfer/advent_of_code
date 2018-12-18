@@ -1,6 +1,11 @@
 [package]
-name = "p2"
+name = "d4"
 version = "0.1.0"
 authors = ["Jonathan Pulfer <jpulfer@cloudflare.com>"]
+edition = "2018"
 
 [dependencies]
+chrono = "0.4.6"
+lazy_static = "1.2.0"
+regex = "1"
+time = "0.1.41"
