@@ -8,6 +8,8 @@ pub struct Polymer {
     raw: String,
     last: String,
     refined: bool,
+    shortest: usize,
+    shortest_last: String,
 }
 
 impl Polymer {
@@ -16,6 +18,8 @@ impl Polymer {
             raw: input.to_string(),
             last: input.to_string(),
             refined: false,
+            shortest: 0,
+            shortest_last: String::new(),
         }
     }
 
@@ -53,8 +57,32 @@ impl Polymer {
 
         if result == self.last {
             self.refined = true;
+            return;
         }
         self.last = result.clone();
+    }
+
+    /// By dropping one unit (of both polarities) it is possible to allow more reactions to occur
+    /// and yield a shorter polymer.
+    pub fn optimum_refine_by_dropping_a_unit(&mut self) -> String {
+        self.shortest = self.last.len();
+
+        for num in 97..97+26 as u8 {
+            let lower = format!("{}", num as char);
+            let upper = lower.to_uppercase();
+
+            let new_raw = self.raw.replace(lower.as_str(), "")
+                .replace(upper.as_str(), "");
+
+            let mut new_p = Polymer::new(new_raw.as_str());
+            let new_refined = new_p.refine();
+            if new_refined.len() < self.shortest {
+                self.shortest = new_refined.len();
+                self.shortest_last = new_refined;
+            }
+        }
+
+        return self.shortest_last.clone();
     }
 }
 

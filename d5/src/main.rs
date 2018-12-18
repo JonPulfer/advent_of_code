@@ -9,6 +9,7 @@ fn main() {
     let input = read_input("input");
     let mut p = lab::Polymer::new(input.as_str());
     println!("refined length: {}", p.refine().len());
+    println!("optimum refined_length: {}", p.optimum_refine_by_dropping_a_unit().len());
 }
 
 /// This seems to be a common pattern for these puzzles.
