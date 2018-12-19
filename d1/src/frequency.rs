@@ -1,6 +1,6 @@
+use std::collections::HashMap;
 use std::error;
 use std::fmt;
-use std::collections::HashMap;
 
 #[derive(Debug)]
 /// Frequency chronal wrist device is operating at.
@@ -28,7 +28,11 @@ impl Frequency {
 
     /// adjust frequency recursively until the repeated frequency is found or limit_iterations
     /// reaches 0.
-    fn adjust_frequency_until_repeats(&mut self, adjustments: &Vec<i32>, mut limit_iterations: i64) -> i64 {
+    fn adjust_frequency_until_repeats(
+        &mut self,
+        adjustments: &Vec<i32>,
+        mut limit_iterations: i64,
+    ) -> i64 {
         let mut result: i64 = self.value;
         for i in adjustments {
             result += *i as i64;
@@ -43,7 +47,6 @@ impl Frequency {
         if limit_iterations > 0 {
             limit_iterations -= 1;
             limit_iterations = self.adjust_frequency_until_repeats(adjustments, limit_iterations);
-
         } else {
             println!("no repeat found");
         }
@@ -67,12 +70,14 @@ impl Frequency {
     /// Process the adjustments repetitively until either the limit is reached or the repeat is
     /// found. This calls the recursive version of the frequency adjustment with depth limited to
     /// the user supplied value.
-    pub fn process_adjustments_until_repeats(&mut self, supplied_adjustments: &str,
-                                             limit_iterations: i64) {
+    pub fn process_adjustments_until_repeats(
+        &mut self,
+        supplied_adjustments: &str,
+        limit_iterations: i64,
+    ) {
         match parse_frequency_adjustments(supplied_adjustments) {
             Ok(results) => {
-                self.adjust_frequency_until_repeats(&results,
-                                                    limit_iterations);
+                self.adjust_frequency_until_repeats(&results, limit_iterations);
                 println!("frequency {}", self.value);
             }
             Err(fail) => {
@@ -84,7 +89,7 @@ impl Frequency {
 
 #[test]
 fn test_two_frequency_changes() {
-    let inp: Vec<i32> = vec!(1, -2);
+    let inp: Vec<i32> = vec![1, -2];
     let mut st: Frequency = Frequency::new(0);
 
     st.adjust_frequency(inp);
@@ -93,7 +98,7 @@ fn test_two_frequency_changes() {
 
 #[test]
 fn test_three_frequency_changes() {
-    let inp: Vec<i32> = vec!(500, -550, 50);
+    let inp: Vec<i32> = vec![500, -550, 50];
     let mut st: Frequency = Frequency::new(0);
 
     st.adjust_frequency(inp);
@@ -102,7 +107,7 @@ fn test_three_frequency_changes() {
 
 /// parse_frequency_adjustments from a comma separated string of values into an array..
 fn parse_frequency_adjustments(input: &str) -> Result<Vec<i32>, AdjustmentError> {
-    let mut results: Vec<i32> = vec!();
+    let mut results: Vec<i32> = vec![];
     let values: Vec<&str> = input.split(",").collect();
 
     for val in values {
@@ -126,10 +131,7 @@ struct AdjustmentError<'a> {
 
 impl<'a> AdjustmentError<'a> {
     pub fn new(source: &'a str, message: &'a str) -> AdjustmentError<'a> {
-        AdjustmentError {
-            source,
-            message,
-        }
+        AdjustmentError { source, message }
     }
 
     fn reason(&self) -> String {

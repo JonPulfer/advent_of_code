@@ -18,7 +18,7 @@ fn main() {
         Ok(file) => file,
     };
 
-    let contents:&mut String = &mut String::new();
+    let contents: &mut String = &mut String::new();
 
     // Read the file contents into a string, returns `io::Result<usize>`
     match file.read_to_string(contents) {
@@ -26,9 +26,11 @@ fn main() {
         Ok(_) => println!("{} read", file_name),
     }
 
-
     // generate a simple checksum from the file contents.
-    println!("simple_checksum: {}", checksum::simple_checksum(contents.as_str()));
+    println!(
+        "simple_checksum: {}",
+        checksum::simple_checksum(contents.as_str())
+    );
 
     let warehouse = warehouse::Warehouse::new(contents.as_str());
     let match_chars = warehouse.look_for_best_matches();

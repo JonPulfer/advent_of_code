@@ -1,7 +1,6 @@
-use std::collections::HashMap;
 use chrono::prelude::*;
 use regex::Regex;
-
+use std::collections::HashMap;
 
 lazy_static! {
     static ref SHIFTSTARTRE: Regex = Regex::new(r"^Guard #(\d+)\sbegins shift$").unwrap();
@@ -38,13 +37,11 @@ impl Guard {
 
     /// Record a sleep period within a shift. There may be more than one sleep seen during a shift.
     fn report_sleep(&mut self, sleep_start: DateTime<Utc>, sleep_end: DateTime<Utc>) {
-
         // Update the total sleep seen for this guard.
         self.total_sleep += sleep_end.signed_duration_since(sleep_start).num_minutes();
 
         // Update the sleep average.
         self.sleep_average_per_shift = self.total_sleep / self.shifts;
-
 
         for m in sleep_start.minute()..sleep_end.minute() {
             let sleep_slot = self.sleep_count_per_minute.entry(m).or_insert(0);
@@ -224,7 +221,6 @@ impl Lab {
     // [1518-07-27 00:57] wakes up
     // [1518-10-21 00:00] Guard #2699 begins shift
     pub fn read_input_into_journal(&mut self, input: String) -> Option<i32> {
-
         // Create our journal from the log found on the wall. Once created, we sort this
         // chronologically to make it easier to analyse.
         let mut journal = Journal::new();
@@ -249,7 +245,6 @@ impl Lab {
     }
 
     pub fn calculate_guard_sleep_patterns(&mut self) {
-
         // find a start entry for a guard entry
         //    read subsequent lines and record any sleep periods exploding time period discovered
         //    by minute
@@ -262,7 +257,9 @@ impl Lab {
             match SHIFTSTARTRE.captures(entry.line.as_str()) {
                 Some(shift_start_line) => {
                     guard_id = String::from(shift_start_line.get(1).map_or("", |m| m.as_str()));
-                    let guard = self.guards.entry(guard_id.clone())
+                    let guard = self
+                        .guards
+                        .entry(guard_id.clone())
                         .or_insert(Guard::new(guard_id.clone()));
                     guard.report_shift();
                     continue;
@@ -276,7 +273,9 @@ impl Lab {
             }
 
             if asleep && SLEEPENDRE.is_match(entry.line.as_str()) {
-                let guard = self.guards.entry(guard_id.clone())
+                let guard = self
+                    .guards
+                    .entry(guard_id.clone())
                     .or_insert(Guard::new(guard_id.clone()));
                 guard.report_sleep(sleep_start, entry.time);
                 asleep = false;
@@ -370,12 +369,13 @@ impl JournalEntry {
 #[test]
 fn test_journal_entry_from_input_line() {
     let input_line = "[1518-05-18 00:01] Guard #1171 begins shift";
-    assert_eq!(JournalEntry::from_input_line(input_line), Some(
-        JournalEntry {
+    assert_eq!(
+        JournalEntry::from_input_line(input_line),
+        Some(JournalEntry {
             time: "1518-05-18T00:01:00Z".parse::<DateTime<Utc>>().unwrap(),
             line: String::from("Guard #1171 begins shift"),
-        }
-    ))
+        })
+    )
 }
 
 #[derive(Debug, Eq, Ord, PartialEq, PartialOrd)]
@@ -386,8 +386,6 @@ struct Journal {
 
 impl Journal {
     pub fn new() -> Journal {
-        Journal {
-            entries: vec!(),
-        }
+        Journal { entries: vec![] }
     }
 }

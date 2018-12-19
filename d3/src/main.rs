@@ -18,10 +18,15 @@ fn main() {
         fabric.allocate(workshop::Claim::from_input_line(line));
     }
 
-    println!("over allocations: {}", fabric.count_over_allocated_squares());
-    println!("claim without collisions: {}", fabric.find_claim_without_collisions());
+    println!(
+        "over allocations: {}",
+        fabric.count_over_allocated_squares()
+    );
+    println!(
+        "claim without collisions: {}",
+        fabric.find_claim_without_collisions()
+    );
 }
-
 
 /// This seems to be a common pattern for these puzzles.
 fn read_input(file_name: &str) -> String {
@@ -43,5 +48,5 @@ fn read_input(file_name: &str) -> String {
         Ok(_) => println!("{} read", file_name),
     }
 
-    return  contents.clone();
+    return contents.clone();
 }

@@ -13,7 +13,6 @@ use std::path::Path;
 mod closet;
 
 fn main() {
-
     let file_input = read_input("input");
     let mut secret_lab = closet::Lab::new();
     match secret_lab.read_input_into_journal(file_input) {
@@ -22,12 +21,20 @@ fn main() {
             secret_lab.calculate_guard_sleep_patterns();
             println!("found {} guards", secret_lab.number_of_guards());
             let (sleepy_guard, sleep_minute) = secret_lab.target_guard_and_minute();
-            println!("guard and minute: guard {}, minute {}", sleepy_guard, sleep_minute);
-            println!("part 1: {}", sleepy_guard.parse::<u32>().unwrap() * sleep_minute);
-            let (regular_sleepy_guard, regular_sleep_minute) = secret_lab
-                .target_regular_sleeping_guard_and_minute();
-            println!("part 2: {}",
-                     regular_sleepy_guard.parse::<u32>().unwrap() * regular_sleep_minute);
+            println!(
+                "guard and minute: guard {}, minute {}",
+                sleepy_guard, sleep_minute
+            );
+            println!(
+                "part 1: {}",
+                sleepy_guard.parse::<u32>().unwrap() * sleep_minute
+            );
+            let (regular_sleepy_guard, regular_sleep_minute) =
+                secret_lab.target_regular_sleeping_guard_and_minute();
+            println!(
+                "part 2: {}",
+                regular_sleepy_guard.parse::<u32>().unwrap() * regular_sleep_minute
+            );
         }
         None => {
             panic!("didn't read any entries");
@@ -55,5 +62,5 @@ fn read_input(file_name: &str) -> String {
         Ok(_) => println!("{} read", file_name),
     }
 
-    return  contents.clone();
+    return contents.clone();
 }

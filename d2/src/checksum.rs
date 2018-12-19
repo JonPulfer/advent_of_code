@@ -62,10 +62,10 @@ fn check_string(input: &str) -> CheckResults {
         }
     }
 
-    return CheckResults{
+    return CheckResults {
         two_letter: found_two,
         three_letter: found_three,
-    }
+    };
 }
 
 #[test]

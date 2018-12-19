@@ -9,7 +9,10 @@ fn main() {
     let input = read_input("input");
     let mut p = lab::Polymer::new(input.as_str());
     println!("refined length: {}", p.refine().len());
-    println!("optimum refined_length: {}", p.optimum_refine_by_dropping_a_unit().len());
+    println!(
+        "optimum refined_length: {}",
+        p.optimum_refine_by_dropping_a_unit().len()
+    );
 }
 
 /// This seems to be a common pattern for these puzzles.
@@ -32,5 +35,5 @@ fn read_input(file_name: &str) -> String {
         Ok(_) => println!("{} read", file_name),
     }
 
-    return  contents.clone();
+    return contents.clone();
 }

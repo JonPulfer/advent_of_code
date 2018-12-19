@@ -67,11 +67,13 @@ impl Polymer {
     pub fn optimum_refine_by_dropping_a_unit(&mut self) -> String {
         self.shortest = self.last.len();
 
-        for num in 97..97+26 as u8 {
+        for num in 97..97 + 26 as u8 {
             let lower = format!("{}", num as char);
             let upper = lower.to_uppercase();
 
-            let new_raw = self.raw.replace(lower.as_str(), "")
+            let new_raw = self
+                .raw
+                .replace(lower.as_str(), "")
                 .replace(upper.as_str(), "");
 
             let mut new_p = Polymer::new(new_raw.as_str());
