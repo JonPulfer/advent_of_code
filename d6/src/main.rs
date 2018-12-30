@@ -11,6 +11,7 @@ fn main() {
     let mut g = grid::Grid::new(coords);
     g.allocate_matrix_points();
     println!("part1 : {}", g.max_allocations_for_finite_point());
+    println!("part2 : {}", g.qualifying_locations);
 }
 
 /// This seems to be a common pattern for these puzzles.

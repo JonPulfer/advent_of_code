@@ -13,6 +13,16 @@ struct Point {
 }
 
 impl Point {
+    fn new(x: i32, y: i32) -> Point {
+        Point {
+            id: 0,
+            x,
+            y,
+            finite: false,
+            allocations: 0,
+        }
+    }
+
     /// Return the Manhattan distance to the provided Point.
     fn distance_to_point(&self, p: Point) -> i32 {
         distance_between_points(self.clone(), p)
@@ -72,6 +82,17 @@ impl Coordinates {
 
         return (max_x, max_y);
     }
+
+    /// Sum up the Manhattan distances of the provided point to all the locations we have.
+    fn sum_distances_to_point(&self, point: Point) -> usize {
+        let mut result: usize = 0;
+
+        for (_k, v) in self.points.iter() {
+            result += v.distance_to_point(point.clone()) as usize;
+        }
+
+        result
+    }
 }
 
 #[test]
@@ -110,12 +131,17 @@ fn test_minimum_bounding_box() {
     assert_eq!(g.minimum_bounding_box_dimension(), (4, 4));
 }
 
+/// Maximum distance a location must be under from all the coordinates to qualify for the second
+/// location selection strategy.
+const MAX_DISTANCE: usize = 10000;
+
 #[derive(Debug)]
 /// The 2D area that encloses all the coordinates. This is based on a minimum bounding box of all
 /// the coordinates provided in the input for the puzzle.
 pub struct Grid {
     matrix: Vec<Vec<Allocation>>,
     coords: Coordinates,
+    pub qualifying_locations: i64,
 }
 
 impl Grid {
@@ -141,6 +167,7 @@ impl Grid {
         Grid {
             matrix: rows,
             coords,
+            qualifying_locations: 0,
         }
     }
 
@@ -174,6 +201,16 @@ impl Grid {
                     for id in self.matrix[y][x].nearest.iter() {
                         allocated_on_edge.push(id.clone());
                     }
+                }
+
+                // Check whether this location is within the prescribed distance from all the
+                // coordinates. Add to the tally used to answer the second part of the puzzle.
+                if self
+                    .coords
+                    .sum_distances_to_point(Point::new(x as i32, y as i32))
+                    < MAX_DISTANCE
+                {
+                    self.qualifying_locations += 1;
                 }
             }
         }
