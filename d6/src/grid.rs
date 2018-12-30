@@ -98,36 +98,9 @@ impl Coordinates {
 #[test]
 fn test_minimum_bounding_box() {
     let mut g = Coordinates::new();
-    g.points.insert(
-        1,
-        Point {
-            id: 1,
-            x: 3,
-            y: 3,
-            finite: false,
-            allocations: 0,
-        },
-    );
-    g.points.insert(
-        2,
-        Point {
-            id: 2,
-            x: 4,
-            y: 2,
-            finite: false,
-            allocations: 0,
-        },
-    );
-    g.points.insert(
-        3,
-        Point {
-            id: 3,
-            x: 2,
-            y: 4,
-            finite: false,
-            allocations: 0,
-        },
-    );
+    g.points.insert(1, Point::new(3, 3));
+    g.points.insert(2, Point::new(4, 2));
+    g.points.insert(3, Point::new(2, 4));
     assert_eq!(g.minimum_bounding_box_dimension(), (4, 4));
 }
 
@@ -152,13 +125,7 @@ impl Grid {
         for y in 0..max_y {
             let mut row_allocations: Vec<Allocation> = vec![];
             for x in 0..max_x {
-                let pos = Allocation::new(Point {
-                    id: 0,
-                    x,
-                    y,
-                    finite: false,
-                    allocations: 0,
-                });
+                let pos = Allocation::new(Point::new(x, y));
                 row_allocations.push(pos);
             }
             rows.push(row_allocations);
@@ -195,7 +162,7 @@ impl Grid {
                     p.allocations += 1;
                 }
 
-                // If this is a  perimeter location, exclude any points that are allocated as the
+                // If this is a perimeter location, exclude any points that are allocated as the
                 // nearest points.
                 if self.is_on_perimiter(x, y) {
                     for id in self.matrix[y][x].nearest.iter() {
@@ -280,36 +247,12 @@ fn distance_between_points(a: Point, b: Point) -> i32 {
 
 #[test]
 fn test_distance_between_points() {
-    let a1 = Point {
-        id: 1,
-        x: 1,
-        y: 1,
-        finite: false,
-        allocations: 0,
-    };
-    let b1 = Point {
-        id: 2,
-        x: 2,
-        y: 2,
-        finite: false,
-        allocations: 0,
-    };
+    let a1 = Point::new(1, 1);
+    let b1 = Point::new(2, 2);
     assert_eq!(distance_between_points(a1, b1), 2);
 
-    let a2 = Point {
-        id: 3,
-        x: 3,
-        y: 5,
-        finite: false,
-        allocations: 0,
-    };
-    let b2 = Point {
-        id: 4,
-        x: 2,
-        y: 7,
-        finite: false,
-        allocations: 0,
-    };
+    let a2 = Point::new(3, 5);
+    let b2 = Point::new(2, 7);
     assert_eq!(distance_between_points(a2, b2), 3);
 }
 
