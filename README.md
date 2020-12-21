@@ -1,8 +1,11 @@
-# Advent of code 2018
+# Advent of code
 
-[Puzzle source](https://adventofcode.com/2018)
+## Years
+ My code for 2018 is in the 2018/ folder, here is a link to [Puzzle source - 2018](https://adventofcode.com/2018)
 
-I've been leisurely working through the recent advent of code using Rust to solve the puzzles. This repos is just
-to record that learning and research and provide me with a reference for later. I haven't included the puzzle text 
-here since I feel it is better to refer back to the source for any context as it might encourage people to support 
-the advent of code in future.
+ My code for 2020 is in the 2020/ folder, here is a link to [Puzzle source - 2020](https://adventofcode.com/2020)
+
+## Blurb
+
+I started working through the 2018 adventofcode to improve my knoweldge of Rust. Along with these tasks I was using Rust more and more in my daily work.
+I enjoy doing the challenges and from time to time drop back to do a few more of them.
