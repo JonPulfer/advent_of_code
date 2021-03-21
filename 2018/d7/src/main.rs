@@ -10,9 +10,8 @@ extern crate regex;
 extern crate lazy_static;
 
 fn main() {
-    let seq = sequencer::Sequencer::new_from_input(read_input("input").as_str());
-    println!("{:?}", seq);
-    println!("{}", seq.dfs());
+    let mut seq = sequencer::Sequencer::new_from_input(read_input("input").as_str());
+    println!("{}", seq.sequence());
 }
 
 /// This seems to be a common pattern for these puzzles.
