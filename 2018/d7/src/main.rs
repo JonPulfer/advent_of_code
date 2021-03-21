@@ -1,4 +1,3 @@
-use std::error::Error;
 use std::fs::File;
 use std::io::prelude::*;
 use std::path::Path;
@@ -24,7 +23,7 @@ fn read_input(file_name: &str) -> String {
     let mut file = match File::open(&path) {
         // The `description` method of `io::Error` returns a string that
         // describes the error
-        Err(why) => panic!("couldn't open {}: {}", file_name, why.description()),
+        Err(why) => panic!("couldn't open {}: {}", file_name, why),
         Ok(file) => file,
     };
 
@@ -32,7 +31,7 @@ fn read_input(file_name: &str) -> String {
 
     // Read the file contents into a string, returns `io::Result<usize>`
     match file.read_to_string(contents) {
-        Err(why) => panic!("couldn't read {}: {}", file_name, why.description()),
+        Err(why) => panic!("couldn't read {}: {}", file_name, why),
         Ok(_) => println!("{} read", file_name),
     }
 

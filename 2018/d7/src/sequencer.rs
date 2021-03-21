@@ -1,9 +1,10 @@
+use std::collections::HashMap;
+
 use petgraph::graph::NodeIndex;
 use petgraph::visit::DfsPostOrder;
 use petgraph::Graph;
 use petgraph::Incoming;
 use regex::Regex;
-use std::collections::HashMap;
 
 lazy_static! {
     static ref PAIRRE: Regex =
@@ -66,25 +67,25 @@ impl Sequencer {
             let pn: NodeIndex<u32>;
             let cn: NodeIndex<u32>;
 
-            let parent_match = node_indexes.get(&convert_to_ascii_value(p.parent.clone()));
+            let parent_match = node_indexes.get(&convert_to_node_weight(&p.parent));
             match parent_match {
                 Some(pn_found) => {
                     pn = *pn_found;
                 }
                 None => {
-                    pn = deps.add_node(convert_to_ascii_value(p.parent.clone()));
-                    node_indexes.insert(convert_to_ascii_value(p.parent.clone()), pn);
+                    pn = deps.add_node(convert_to_node_weight(&p.parent));
+                    node_indexes.insert(convert_to_node_weight(&p.parent), pn);
                 }
             }
 
-            let child_match = node_indexes.get(&convert_to_ascii_value(p.child.clone()));
+            let child_match = node_indexes.get(&convert_to_node_weight(&p.child));
             match child_match {
                 Some(cn_found) => {
                     cn = *cn_found;
                 }
                 None => {
-                    cn = deps.add_node(convert_to_ascii_value(p.child.clone()));
-                    node_indexes.insert(convert_to_ascii_value(p.child.clone()), cn);
+                    cn = deps.add_node(convert_to_node_weight(&p.child));
+                    node_indexes.insert(convert_to_node_weight(&p.child), cn);
                 }
             }
 
@@ -97,11 +98,11 @@ impl Sequencer {
     pub fn dfs(&self) -> String {
         let mut thing = self.tree.externals(Incoming);
         let mut d = DfsPostOrder::new(&self.tree, thing.next().unwrap());
-        let mut result: String = String::new();
+        let mut nodes: Vec<String> = vec![];
         while let Some(c) = d.next(&self.tree) {
-            result.push_str(convert_from_ascii_value(self.tree[c]).as_str());
+            nodes.push(convert_from_node_weight(self.tree[c]));
         }
-        return result;
+        return nodes.join("");
     }
 }
 
@@ -118,31 +119,35 @@ Step F must be finished before step E can begin.";
     assert_eq!("CABDFE", seq.dfs());
 }
 
-fn convert_to_ascii_value(original: String) -> u8 {
+fn convert_to_node_weight(original: &String) -> u8 {
     let char = original.chars().next().unwrap();
-    char as u8
+    91 - char as u8
 }
 
 #[test]
-fn test_convert_to_ascii_value() {
+fn test_convert_to_node_weight() {
     let letter_a = "A".to_string();
-    assert_eq!(65, convert_to_ascii_value(letter_a));
+    assert_eq!(26, convert_to_node_weight(&letter_a));
 
     let letter_b = "B".to_string();
-    assert_eq!(66, convert_to_ascii_value(letter_b));
+    assert_eq!(25, convert_to_node_weight(&letter_b));
+
+    let letter_z = "Z".to_string();
+    assert_eq!(1, convert_to_node_weight(&letter_z));
 }
 
-fn convert_from_ascii_value(original: u8) -> String {
+fn convert_from_node_weight(original: u8) -> String {
     let mut result: String = String::new();
-    result.push(original as char);
+    let calculated = 91 - original;
+    result.push(calculated as char);
     return result;
 }
 
 #[test]
-fn test_convert_from_ascii_value() {
-    let value_a: u8 = 65;
-    assert_eq!("A".to_string(), convert_from_ascii_value(value_a));
+fn test_convert_from_node_weight() {
+    let value_a = convert_to_node_weight(&"A".to_string());
+    assert_eq!("A".to_string(), convert_from_node_weight(value_a));
 
-    let value_b: u8 = 66;
-    assert_eq!("B".to_string(), convert_from_ascii_value(value_b));
+    let value_b = convert_to_node_weight(&"B".to_string());
+    assert_eq!("B".to_string(), convert_from_node_weight(value_b));
 }
